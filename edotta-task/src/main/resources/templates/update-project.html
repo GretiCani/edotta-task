@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+     integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+<title>Add Project</title>
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+  <div class="container">
+   <a class="navbar-brand" href="#" th:href="@{/}">EDOTTA TASK</a>
+        
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <a class="nav-link" th:href="@{/}">Home
+                <span class="sr-only">(current)</span>
+              </a>
+        </li>
+       <!-- --------------------------------------------------------- -->
+        <li class="nav-item" sec:authorize="hasAuthority('ADMIN')" >                   
+          <a class="nav-link" th:href="@{/admin/list}">Users</a>
+        </li>
+    <!-- ----------------------------------------------------------------- -->
+        <li class="nav-item" sec:authorize="hasAuthority('TEAM_LEADER')" >                   
+          <a class="nav-link" th:href="@{/projects/addprojects}">Add Projects</a>
+        </li>
+    <!-- ----------------------------------------------------------------------------->
+    
+    
+        <li sec:authorize="isAuthenticated()"><a th:href="@{/logout}">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+	<br>
+	<br>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+
+				<div th:if="${param.success}">
+					<div class="alert alert-info">New Project Successfully Added!
+						</div>
+				</div>
+
+				<h1>Add Project</h1>
+				<form th:action="@{/projects/save}" th:object="${projects}" method="post">
+
+					<p class="error-message" th:if="${#fields.hasGlobalErrors()}"
+						th:each="error : ${#fields.errors('global')}" th:text="${error}">Validation
+						error</p>
+
+					<div class="form-group"
+						th:classappend="${#fields.hasErrors('description')}? 'has-error':''">
+						<label for="description" class="control-label">Description</label> <input
+							id="description" class="form-control" th:field="*{description}" />
+						<p class="text-danger"
+							th:each="error: ${#fields.errors('description')}"
+							th:text="${error}">Validation error</p>
+					</div>
+					<div class="form-group"
+						th:classappend="${#fields.hasErrors('content')}? 'has-error':''">
+						<label for="content" class="control-label">Content</label> <textarea
+							id="content" class="form-control" th:field="*{content}" rows="4" cols="5"></textarea>
+						<p class="text-danger"
+							th:each="error : ${#fields.errors('content')}" th:text="${error}">Validation
+							error</p>
+					</div>
+					
+					<div class="form-group">
+						<input type="submit" class="form-control btn btn-primary" value="Add Project"></input>
+					</div>
+
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
